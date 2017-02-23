@@ -173,168 +173,6 @@
     }
   },
   "Resources" : {
-    "HyboxConfigurationTemplate" : {
-      "Type" : "AWS::ElasticBeanstalk::ConfigurationTemplate",
-      "Properties" : {
-        "ApplicationName" : { "Ref" : "ApplicationName"},
-        "Description" : "Hybox configuration template",
-        "OptionSettings" : [
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "InstanceType",
-            "Value" : { "Ref" : "InstanceType" }
-          },
-          {
-            "Namespace" : "aws:ec2:vpc",
-            "OptionName" : "Subnets",
-            "Value" : { "Fn::Join" : [",", { "Ref" : "PrivateSubnets" }] }
-          },
-          {
-            "Namespace" : "aws:ec2:vpc",
-            "OptionName" : "ELBSubnets",
-            "Value" : { "Fn::Join" : [",", { "Ref" : "PublicSubnets" }] }
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "EC2KeyName",
-            "Value" : { "Ref" : "KeyName" }
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "SSHSourceRestriction",
-            "Value" : "tcp, 22, 22, 10.0.0.0/16"
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "SecurityGroups",
-            "Value" : { "Fn::Join": [",", { "Ref" : "SecurityGroups" }] }
-          },
-          {
-            "Namespace" : "aws:elb:loadbalancer",
-            "OptionName" : "SecurityGroups",
-            "Value" : { "Fn::Join": [",", { "Ref" : "LBSecurityGroups" }] }
-          },
-          {
-            "Namespace" : "aws:elb:loadbalancer",
-            "OptionName" : "CrossZone",
-            "Value" : "true"
-          },
-          {
-            "Namespace" : "aws:elb:policies",
-            "OptionName" : "ConnectionDrainingEnabled",
-            "Value" : "true"
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "IamInstanceProfile",
-            "Value" : { "Ref" : "IamInstanceProfile" }
-          },
-          {
-            "Namespace": "aws:autoscaling:asg",
-            "OptionName": "MinSize",
-            "Value": { "Ref" : "MinSize" }
-          },
-          {
-            "Namespace": "aws:autoscaling:asg",
-            "OptionName": "MaxSize",
-            "Value": { "Ref" : "MaxSize" }
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:environment",
-            "OptionName": "EnvironmentType",
-            "Value": "LoadBalanced"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:command",
-            "OptionName": "DeploymentPolicy",
-            "Value": "Immutable"
-          },
-          {
-            "Namespace": "aws:autoscaling:updatepolicy:rollingupdate",
-            "OptionName": "RollingUpdateEnabled",
-            "Value": "true"
-          },
-          {
-            "Namespace": "aws:autoscaling:updatepolicy:rollingupdate",
-            "OptionName": "RollingUpdateType",
-            "Value": "Health"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:application",
-            "OptionName": "Application Healthcheck URL",
-            "Value": "/is_it_working"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:healthreporting:system",
-            "OptionName": "SystemType",
-            "Value": { "Ref" : "HealthReportingSystemType" }
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:environment",
-            "OptionName": "ServiceRole",
-            "Value": "aws-elasticbeanstalk-service-role"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:sns:topics",
-            "OptionName": "Notification Topic ARN",
-            "Value": { "Ref" : "BeanstalkSNSTopic"}
-          },
-          {
-            "Namespace": "aws:elb:listener:80",
-            "OptionName": "ListenerProtocol",
-            "Value": "HTTP"
-          },
-          { "Fn::If": [
-            "HasSSLCertificate",
-            {
-              "Namespace": "aws:elb:listener:443",
-              "OptionName": "SSLCertificateId",
-              "Value": { "Ref" : "SSLCertificateId" }
-            },
-            { "Ref" : "AWS::NoValue" }
-          ]},
-          { "Fn::If": [
-            "HasSSLCertificate",
-            {
-              "Namespace": "aws:elb:listener:443",
-              "OptionName": "InstancePort",
-              "Value": "80"
-            },
-            { "Ref" : "AWS::NoValue" }
-          ]},
-          { "Fn::If": [
-            "HasSSLCertificate",
-            {
-              "Namespace": "aws:elb:listener:443",
-              "OptionName": "ListenerProtocol",
-              "Value": "HTTPS"
-            },
-            { "Ref" : "AWS::NoValue" }
-          ]},
-          {
-            "Namespace": "aws:elasticbeanstalk:managedactions:platformupdate",
-            "OptionName": "UpdateLevel",
-            "Value": "minor"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:managedactions:platformupdate",
-            "OptionName": "InstanceRefreshEnabled",
-            "Value": "true"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:managedactions",
-            "OptionName": "ManagedActionsEnabled",
-            "Value": "true"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:managedactions",
-            "OptionName": "PreferredStartTime",
-            "Value": "Sun:00:00"
-          }
-        ],
-        "SolutionStackName" : "64bit Amazon Linux 2016.09 v2.3.0 running Ruby 2.3 (Puma)"
-      }
-    },
     "WebappEnvironment": {
       "Type": "AWS::ElasticBeanstalk::Environment",
       "Properties": {
@@ -353,11 +191,6 @@
             "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "RAILS_GROUPS",
             "Value": "aws"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "RAILS_SERVE_STATIC_FILES",
-            "Value": "true"
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
@@ -441,11 +274,6 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "DISABLE_SQS_CONSUMER",
-            "Value": "true"
-          },
-          {
-            "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "AWS_REGION",
             "Value": { "Ref" : "AWS::Region"}
           },
@@ -456,13 +284,23 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "SETTINGS__GOOGLE_ANALYTICS_ID",
-            "Value": { "Ref" : "GoogleAnalyticsId"}
+            "OptionName": "HONEYBADGER_API_KEY",
+            "Value": { "Ref" : "HoneybadgerApiKey"}
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "HONEYBADGER_API_KEY",
-            "Value": { "Ref" : "HoneybadgerApiKey"}
+            "OptionName": "RAILS_SERVE_STATIC_FILES",
+            "Value": "true"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "DISABLE_SQS_CONSUMER",
+            "Value": "true"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SETTINGS__GOOGLE_ANALYTICS_ID",
+            "Value": { "Ref" : "GoogleAnalyticsId"}
           },
           { "Fn::If": [
             "HasSSLCertificate",
@@ -474,6 +312,193 @@
             { "Ref" : "AWS::NoValue" }
           ]}
         ]
+      }
+    },
+    "HyboxConfigurationTemplate" : {
+      "Type" : "AWS::ElasticBeanstalk::ConfigurationTemplate",
+      "Properties" : {
+        "ApplicationName" : { "Ref" : "ApplicationName"},
+        "Description" : "Hybox configuration template",
+        "OptionSettings" : [
+          {
+            "Namespace": "aws:autoscaling:asg",
+            "OptionName": "MinSize",
+            "Value": { "Ref" : "MinSize" }
+          },
+          {
+            "Namespace": "aws:autoscaling:asg",
+            "OptionName": "MaxSize",
+            "Value": { "Ref" : "MaxSize" }
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "EC2KeyName",
+            "Value" : { "Ref" : "KeyName" }
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "IamInstanceProfile",
+            "Value" : { "Ref" : "IamInstanceProfile" }
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "InstanceType",
+            "Value" : { "Ref" : "InstanceType" }
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "SecurityGroups",
+            "Value" : { "Fn::Join": [",", { "Ref" : "SecurityGroups" }] }
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "SSHSourceRestriction",
+            "Value" : "tcp, 22, 22, 10.0.0.0/16"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "LowerThreshold",
+            "Value" : "30"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "MeasureName",
+            "Value" : "CPUUtilization"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "Statistic",
+            "Value" : "Maximum"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "Unit",
+            "Value" : "Percent"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "UpperThreshold",
+            "Value" : "85"
+          },
+          {
+            "Namespace": "aws:autoscaling:updatepolicy:rollingupdate",
+            "OptionName": "RollingUpdateEnabled",
+            "Value": "true"
+          },
+          {
+            "Namespace": "aws:autoscaling:updatepolicy:rollingupdate",
+            "OptionName": "RollingUpdateType",
+            "Value": "Health"
+          },
+          {
+            "Namespace" : "aws:ec2:vpc",
+            "OptionName" : "Subnets",
+            "Value" : { "Fn::Join" : [",", { "Ref" : "PrivateSubnets" }] }
+          },
+          {
+            "Namespace" : "aws:ec2:vpc",
+            "OptionName" : "ELBSubnets",
+            "Value" : { "Fn::Join" : [",", { "Ref" : "PublicSubnets" }] }
+          },
+          {
+            "Namespace" : "aws:elb:loadbalancer",
+            "OptionName" : "SecurityGroups",
+            "Value" : { "Fn::Join": [",", { "Ref" : "LBSecurityGroups" }] }
+          },
+          {
+            "Namespace" : "aws:elb:loadbalancer",
+            "OptionName" : "CrossZone",
+            "Value" : "true"
+          },
+          {
+            "Namespace" : "aws:elb:policies",
+            "OptionName" : "ConnectionDrainingEnabled",
+            "Value" : "true"
+          },
+          {
+            "Namespace": "aws:elb:listener:80",
+            "OptionName": "ListenerProtocol",
+            "Value": "HTTP"
+          },
+          { "Fn::If": [
+            "HasSSLCertificate",
+            {
+              "Namespace": "aws:elb:listener:443",
+              "OptionName": "SSLCertificateId",
+              "Value": { "Ref" : "SSLCertificateId" }
+            },
+            { "Ref" : "AWS::NoValue" }
+          ]},
+          { "Fn::If": [
+            "HasSSLCertificate",
+            {
+              "Namespace": "aws:elb:listener:443",
+              "OptionName": "InstancePort",
+              "Value": "80"
+            },
+            { "Ref" : "AWS::NoValue" }
+          ]},
+          { "Fn::If": [
+            "HasSSLCertificate",
+            {
+              "Namespace": "aws:elb:listener:443",
+              "OptionName": "ListenerProtocol",
+              "Value": "HTTPS"
+            },
+            { "Ref" : "AWS::NoValue" }
+          ]},
+          {
+            "Namespace": "aws:elasticbeanstalk:application",
+            "OptionName": "Application Healthcheck URL",
+            "Value": "/is_it_working"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:command",
+            "OptionName": "DeploymentPolicy",
+            "Value": "Immutable"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:healthreporting:system",
+            "OptionName": "SystemType",
+            "Value": { "Ref" : "HealthReportingSystemType" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:environment",
+            "OptionName": "EnvironmentType",
+            "Value": "LoadBalanced"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:environment",
+            "OptionName": "ServiceRole",
+            "Value": "aws-elasticbeanstalk-service-role"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:sns:topics",
+            "OptionName": "Notification Topic ARN",
+            "Value": { "Ref" : "BeanstalkSNSTopic"}
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:managedactions:platformupdate",
+            "OptionName": "UpdateLevel",
+            "Value": "minor"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:managedactions:platformupdate",
+            "OptionName": "InstanceRefreshEnabled",
+            "Value": "true"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:managedactions",
+            "OptionName": "ManagedActionsEnabled",
+            "Value": "true"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:managedactions",
+            "OptionName": "PreferredStartTime",
+            "Value": "Sun:00:00"
+          }
+        ],
+        "SolutionStackName" : "64bit Amazon Linux 2016.09 v2.3.0 running Ruby 2.3 (Puma)"
       }
     },
     "EBRecordSet" : {

@@ -246,13 +246,13 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "SETTINGS__S3__UPLOAD_BUCKET",
-            "Value": { "Ref" : "UploadBucket"}
+            "OptionName": "SETTINGS__ACTIVE_JOB__QUEUE_ADAPTER",
+            "Value": "better_active_elastic_job"
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "HONEYBADGER_API_KEY",
-            "Value": { "Ref" : "HoneybadgerApiKey"}
+            "OptionName": "SETTINGS__ACTIVE_JOB_QUEUE__URL",
+            "Value": { "Ref" : "DefaultQueue"}
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
@@ -261,13 +261,13 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "SETTINGS__ACTIVE_JOB__QUEUE_ADAPTER",
-            "Value": "better_active_elastic_job"
+            "OptionName": "SETTINGS__S3__UPLOAD_BUCKET",
+            "Value": { "Ref" : "UploadBucket"}
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "SETTINGS__ACTIVE_JOB_QUEUE__URL",
-            "Value": { "Ref" : "DefaultQueue"}
+            "OptionName": "HONEYBADGER_API_KEY",
+            "Value": { "Ref" : "HoneybadgerApiKey"}
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
@@ -299,36 +299,6 @@
         "Description" : "Hybox configuration template",
         "OptionSettings" : [
           {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "InstanceType",
-            "Value" : { "Ref" : "InstanceType"}
-          },
-          {
-            "Namespace" : "aws:ec2:vpc",
-            "OptionName" : "Subnets",
-            "Value" : { "Fn::Join" : [",", { "Ref" : "PrivateSubnets" }] }
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "EC2KeyName",
-            "Value" : { "Ref" : "KeyName" }
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "SSHSourceRestriction",
-            "Value" : "tcp, 22, 22, 10.0.0.0/16"
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "SecurityGroups",
-            "Value" : { "Fn::Join": [",", { "Ref" : "SecurityGroups" }] }
-          },
-          {
-            "Namespace" : "aws:autoscaling:launchconfiguration",
-            "OptionName" : "IamInstanceProfile",
-            "Value" : { "Ref" : "IamInstanceProfile" }
-          },
-          {
             "Namespace": "aws:autoscaling:asg",
             "OptionName": "MinSize",
             "Value": { "Ref" : "MinSize" }
@@ -339,14 +309,54 @@
             "Value": { "Ref" : "MaxSize" }
           },
           {
-            "Namespace": "aws:elasticbeanstalk:environment",
-            "OptionName": "EnvironmentType",
-            "Value": "LoadBalanced"
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "EC2KeyName",
+            "Value" : { "Ref" : "KeyName" }
           },
           {
-            "Namespace": "aws:elasticbeanstalk:command",
-            "OptionName": "DeploymentPolicy",
-            "Value": "Immutable"
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "IamInstanceProfile",
+            "Value" : { "Ref" : "IamInstanceProfile" }
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "InstanceType",
+            "Value" : { "Ref" : "InstanceType"}
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "SecurityGroups",
+            "Value" : { "Fn::Join": [",", { "Ref" : "SecurityGroups" }] }
+          },
+          {
+            "Namespace" : "aws:autoscaling:launchconfiguration",
+            "OptionName" : "SSHSourceRestriction",
+            "Value" : "tcp, 22, 22, 10.0.0.0/16"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "LowerThreshold",
+            "Value" : "30"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "MeasureName",
+            "Value" : "CPUUtilization"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "Statistic",
+            "Value" : "Maximum"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "Unit",
+            "Value" : "Percent"
+          },
+          {
+            "Namespace" : "aws:autoscaling:trigger",
+            "OptionName" : "UpperThreshold",
+            "Value" : "85"
           },
           {
             "Namespace": "aws:autoscaling:updatepolicy:rollingupdate",
@@ -359,14 +369,29 @@
             "Value": "Health"
           },
           {
-            "Namespace": "aws:elasticbeanstalk:healthreporting:system",
-            "OptionName": "SystemType",
-            "Value": { "Ref" : "HealthReportingSystemType" }
+            "Namespace" : "aws:ec2:vpc",
+            "OptionName" : "Subnets",
+            "Value" : { "Fn::Join" : [",", { "Ref" : "PrivateSubnets" }] }
           },
           {
             "Namespace": "aws:elasticbeanstalk:application",
             "OptionName": "Application Healthcheck URL",
             "Value": "/is_it_working"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:command",
+            "OptionName": "DeploymentPolicy",
+            "Value": "Immutable"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:healthreporting:system",
+            "OptionName": "SystemType",
+            "Value": { "Ref" : "HealthReportingSystemType" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:environment",
+            "OptionName": "EnvironmentType",
+            "Value": "LoadBalanced"
           },
           {
             "Namespace": "aws:elasticbeanstalk:environment",
